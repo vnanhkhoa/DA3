@@ -2,6 +2,14 @@ var connection = require('../connection.js');
 
 module.exports = {
 
+    select: (req, res) => {
+
+        connection.query("SELECT * FROM `"+req.params.table+"`", (err, rows) => {
+            if (err) throw err;
+            res.send(rows);
+        })
+    },
+
     lop: (req, res) => {
 
         connection.query("SELECT * FROM `lop`", (err, rows) => {
@@ -182,7 +190,6 @@ module.exports = {
         var sql = "SELECT * FROM `mon_hoc`";
         connection.query(sql, (err, rows) => {
             if (err) throw err;
-            console.log(rows)
             res.render('page/subject', {
                 title: 'Subject',
                 user: res.locals.user,
@@ -200,12 +207,29 @@ module.exports = {
     },
 
     insert_subject: (req, res) => {
-        var sql_account = "INSERT INTO `mon_hoc`(`ma_mon_hoc`, `ten_mon_hoc`) VALUES ('" + req.body.ma_mon_hoc + "','" + req.body.ten_mon_hoc + "')";
-        connection.query(sql_account, (err, rows) => {
+        var sql_account = "INSERT INTO `mon_hoc`( `ma_mon_hoc`, `ten_mon_hoc`, `bat_dau`, `ket_thuc`) VALUES (?,?,?,?)";
+        console.log(req.body);
+        var Subject = [
+            req.body.ma_mon_hoc,
+            req.body.ten_mon_hoc,
+            req.body.bat_dau,
+            req.body.ket_thuc,
+        ];
+        connection.query(sql_account,Subject, (err, rows) => {
             if (err) throw err;
             res.redirect("/home/subject");
         })
     },
 
-
+    calendar: (req, res) => {
+        var sql = "SELECT * FROM `giao_vien` AS gv,`lich_hoc` as lh,`lop_hoc_phan` as lhp where lh.`ma_lop_hp` = lhp.`ma_lop_hp` AND lh.mgv = gv.mgv;";
+        connection.query(sql, (err, rows) => {
+            if (err) throw err;
+            res.render('page/calendar', {
+                title: 'Calendar',
+                user: res.locals.user,
+                calenders: rows,
+            })
+        })
+    },
 }

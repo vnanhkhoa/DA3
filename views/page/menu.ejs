@@ -24,17 +24,18 @@
            <li><a href="home/class/">Danh Sách Lớp</a><span class="icon"><i class="fas fa-th-list"></i></span></li>
 
            <li><a href="home/student">Sinh Viên</a><span class="icon"><i class="fas fa-user-graduate"></i></span></li>
-           <li><a href="home/teacher/">Giáo Viên</a><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span></li>
+           <li><a href="home/teacher/">Giáo Viên</a><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span>
+           </li>
            <li><a href="home/subject/">Môn Học</a><span class="icon"><i class="fas fa-book"></i></span></li>
+           <li><a href="home/calendar/">Lịch Học</a><span class="icon"><i class="fas fa-calendar"></i></span></li>
          </ul>
-
        </div>
 
    </nav>
  </div>
  <script>
-   $(document).ready(function() {
-     $('.nav-toggle').click(function(e) {
+   $(document).ready(function () {
+     $('.nav-toggle').click(function (e) {
        e.preventDefault();
        $("html").toggleClass("openNav");
        $(".nav-toggle").toggleClass("active");

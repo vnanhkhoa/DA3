@@ -18,4 +18,6 @@ router.post('/teacher/update', homeController.update_teacher);
 router.get('/subject', homeController.subject);
 router.post('/subject/add', homeController.insert_subject);
 router.post('/subject/update', homeController.update_subject);
+router.get('/calendar', homeController.calendar);
+router.get('/:table', homeController.select);
 module.exports = router;

@@ -18,6 +18,16 @@
             });
         });
 
+        $("#addlh").click(() => {
+            $.get(url + "home/mon_hoc/", function (data) {
+                var s = "";
+                data.forEach((subject) => {
+                    s = s + "<option value='"+subject.id+"'>"+subject.ten_mon_hoc+"</option>";
+                });
+                $('#mon_hoc').html(s);
+            });
+        });
+
         // setInterval(function () {
         //     console.log("Anh Khoa \n");
         // }, 3000);
@@ -25,7 +35,7 @@
 </script>
 
 <div class="container-fluid">
-    <h3 class="text-center">DANH SÁCH MÔN HỌC</h3>
+    <h3 class="text-center">DANH SÁCH Lịch Học</h3>
     <div class="row">
         <div class="col-6 row">
             <label for="myInput" class="col-sm-2 col-form-label">Tìm Kiếm</label>
@@ -34,7 +44,7 @@
             </div>
         </div>
         <div class="col-6 text-right">
-            <a href="#" class="rounded rounded-circle btn btn-success text-light pl-lg-2 pr-lg-2 pt-1 pb-1"
+            <a href="#" id="addlh" class="rounded rounded-circle btn btn-success text-light pl-lg-2 pr-lg-2 pt-1 pb-1"
                 data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i>
             </a>
         </div>
@@ -43,40 +53,36 @@
         <thead>
             <tr align="center">
                 <th>STT</th>
-                <th>Mã Môn Học</th>
-                <th>Tên Môn học</th>
-                <th>Thời Gian Bắt Đầu</th>
-                <th>Thời Gian Kết Thúc</th>
+                <th>Mã Lịch Học</th>
+                <th>Tên Lớp Học Phần</th>
+                <th>Tiết</th>
+                <th>Thời Gian</th>
+                <th>Phòng</th>
+                <th>Giáo Viên</th>
                 <th>Chức Năng</th>
             </tr>
         </thead>
         <tbody>
-            <% subjects.forEach(function(subject,index) { %>
-            <tr align="center" id="<%- subject.id %>">
-                <% var date = new Date(subject.bat_dau)
-                var bat_dau = ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
-                var bd =  date.getFullYear() + '-' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '-' +((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate()));
-                %>
-                <% var date = new Date(subject.ket_thuc)
-                var ket_thuc = ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
-                var kt =  date.getFullYear() + '-' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '-' +((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate()));
-                %>
+            <% calenders.forEach(function(calender,index) { %>
+            <tr align="center" id="<%- calender.id %>">
                 <td><%- index+1 %></td>
-                <td><%= subject.ma_mon_hoc %></td>
-                <td><a href="javascript:void(0);"><%- subject.ten_mon_hoc %></a></td>
-                <td><%- bat_dau %></td>
-                <td><%- ket_thuc %></td>
+                <td><%= calender.ma_lich %></td>
+                <td><%- calender.ten_lop_hp %></td>
+                <td><%- calender.tiet_hoc %></td>
+                <td><%- calender.ten_lop_hp %></td>
+                <td><%- calender.phong %></td>
+                <td><%- calender.ten %></td>
                 <td>
-                    <a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- subject.id %>"
+                    <a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- calender.ma_lich %>"
                         class="btn btn-warning text-light">
                         Sửa
                     </a>
 
                     <a class="btn btn-danger text-light" data-toggle="modal"
-                        data-target="#Modal<%- subject.id %>">Xóa</a>
+                        data-target="#Modal<%- calender.ma_lich %>">Xóa</a>
                 </td>
             </tr>
-            <div class="modal fade" id="Modal<%- subject.id %>" tabindex="-1" role="dialog"
+            <div class="modal fade" id="Modal<%- calender.ma_lich %>" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -87,17 +93,17 @@
                             </button>
                         </div>
                         <div class="modal-body">
-                            Xóa Môn Học<%- subject.ten_mon_hoc %>
+                            Xóa Lịch Học Của <%- calender.ten_lop_hp %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                            <button type="button" name="delete" data-dismiss="modal" value="<%- subject.id %>"
+                            <button type="button" name="delete" data-dismiss="modal" value="<%- calender.ma_lich %>"
                                 class="btn btn-primary">Xóa</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal fade" id="exampleModal<%- subject.id %>" tabindex="-1" role="dialog"
+            <div class="modal fade" id="exampleModal<%- calendar.ma_lich %>" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -112,16 +118,16 @@
                                 <div class="form-group">
                                     <label class="font-weight-bold">Mã Môn Học</label>
                                     <input type="text" class="form-control" name="ma_mon_hoc"
-                                        value="<%= subject.ma_mon_hoc %>" />
+                                        value="<%= calendar.ma_mon_hoc %>" />
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Tên Lớp</label>
                                     <input type="text" class="form-control" name="ten_mon_hoc"
-                                        value="<%- subject.ten_mon_hoc %>" />
+                                        value="<%- calendar.ten_mon_hoc %>" />
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Ngày Bắt Đầu</label>
-                                    <input type="date" class="form-control" name="bat_dau" value="<%- bd %>" />
+                                    <input type="date" class="form-control" name="bat_dau" value="<%- calendar %>" />
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Ngày Kết Thúc</label>
@@ -129,7 +135,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" value="<%- subject.id %>" class="btn btn-success w-25"
+                                <button type="submit" value="<%- calendar.id %>" class="btn btn-success w-25"
                                     name="id">Lưu</button>
                             </div>
                         </form>
@@ -160,8 +166,8 @@
                         <input type="text" class="form-control" name="ten_mon_hoc" value="" />
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-bold">Ngày Bắt Đầu</label>
-                        <input type="date" class="form-control" name="bat_dau"  />
+                        <label class="font-weight-bold">Môn Học</label>
+                        <select class="form-control" id="mon_hoc" name="mon_hoc"></select>
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Ngày Kết Thúc</label>
