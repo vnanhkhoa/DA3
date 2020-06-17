@@ -18,24 +18,35 @@
             });
         });
 
-        $("#addlh").click(() => {
-            $.get(url + "home/mon_hoc/", function (data) {
+
+        $("select[name='mon_hoc']").on('change', function () {
+            var id = this.value;
+            $.get(url + "home/calendar/modules/" + id, function (data) {
                 var s = "";
                 data.forEach((subject) => {
-                    s = s + "<option value='"+subject.id+"'>"+subject.ten_mon_hoc+"</option>";
+                    s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject
+                        .ten_lop_hp + "</option>";
                 });
-                $('#mon_hoc').html(s);
+                $("select[name='lop_hp']").html(s);
             });
         });
 
-        // setInterval(function () {
-        //     console.log("Anh Khoa \n");
-        // }, 3000);
+        $("#addlh").on('click', function () {
+            var id = $("select[name='mon_hoc']").val();
+            $.get(url + "home/calendar/modules/" + id, function (data) {
+                var s = "";
+                data.forEach((subject) => {
+                    s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject
+                        .ten_lop_hp + "</option>";
+                });
+                $("select[name='lop_hp']").html(s);
+            });
+        });
     });
 </script>
 
 <div class="container-fluid">
-    <h3 class="text-center">DANH SÁCH Lịch Học</h3>
+    <h3 class="text-center">DANH SÁCH LỊCH HỌC</h3>
     <div class="row">
         <div class="col-6 row">
             <label for="myInput" class="col-sm-2 col-form-label">Tìm Kiếm</label>
@@ -53,7 +64,6 @@
         <thead>
             <tr align="center">
                 <th>STT</th>
-                <th>Mã Lịch Học</th>
                 <th>Tên Lớp Học Phần</th>
                 <th>Tiết</th>
                 <th>Thời Gian</th>
@@ -66,7 +76,6 @@
             <% calenders.forEach(function(calender,index) { %>
             <tr align="center" id="<%- calender.id %>">
                 <td><%- index+1 %></td>
-                <td><%= calender.ma_lich %></td>
                 <td><%- calender.ten_lop_hp %></td>
                 <td><%- calender.tiet_hoc %></td>
                 <td><%- calender.ten_lop_hp %></td>
@@ -150,7 +159,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Thêm Môn Học</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Lịch Học</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -158,20 +167,40 @@
             <form class="p-2" method="post" action="/home/subject/add">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label class="font-weight-bold">Mã Môn Học</label>
-                        <input type="text" class="form-control" name="ma_mon_hoc" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="font-weight-bold">Tên Môn Học</label>
-                        <input type="text" class="form-control" name="ten_mon_hoc" value="" />
-                    </div>
-                    <div class="form-group">
                         <label class="font-weight-bold">Môn Học</label>
-                        <select class="form-control" id="mon_hoc" name="mon_hoc"></select>
+                        <select class="form-control" name="mon_hoc">
+                            <% subjects.forEach(function(subject) { %>
+                            <option value="<%= subject.ma_mon_hoc %>"><%= subject.ten_mon_hoc %> </option>
+                            <% }) %>
+                        </select>
                     </div>
                     <div class="form-group">
-                        <label class="font-weight-bold">Ngày Kết Thúc</label>
-                        <input type="date" class="form-control" name="ket_thuc" />
+                        <label class="font-weight-bold">Lớp Học Phần</label>
+                        <select class="form-control" name="lop_hp"></select>
+                    </div>
+                    <div class="form-group row mt-4 mb-1">
+                        <label class="font-weight-bold col-4 pt-1">Tiết Học</label>
+                        <div class="form-group col-8 row p-0">
+                            <div class="col-4 m-0 p-0">
+                                <select class="form-control" name="tiet_hoc">
+                                    <% for (var i = 1; i <=10; i++) { %>
+                                    <option value="<%= i %>"> Tiết <%= i %> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                            <div class="col-4 font-weight-bold pt-1 text-center"> --> </div>
+                            <div class="col-4 m-0 p-0">
+                                <select class="form-control" name="tiet_hoc">
+                                    <% for (var i = 1; i <=10; i++) { %>
+                                    <option value="<%= i %>"> Tiết <%= i %> </option>
+                                    <% } %>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Phòng</label>
+                        <input type="text" class="form-control" name="phong" />
                     </div>
                 </div>
                 <div class="modal-footer">
