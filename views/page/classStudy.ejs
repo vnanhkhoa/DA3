@@ -1,0 +1,171 @@
+<script>
+    $(document).ready(function () {
+        $("#myInput").on("keyup", function () {
+            var search = $(this).val().toLowerCase();
+            $("#myTable tbody tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(search) > -1)
+            });
+        })
+        $("button[name='delete']").click(function () {
+            var id = $(this).val();
+            $.get(url + "home/delete/lop_hoc_phan/" + id, function (data) {
+                console.log(data)
+                if (data == true) {
+                    $("#myTable #" + id).fadeTo(500, 0, function () {
+                        $(this).remove();
+                    });
+                }
+            });
+        });
+
+        $("#addlhp").click(() => {
+            $.get(url + "home/mon_hoc/", function (data) {
+                var s = "";
+                data.forEach((subject) => {
+                    s = s + "<option value='"+subject.ma_mon_hoc+"'>"+subject.ten_mon_hoc+"</option>";
+                });
+                $('#mon_hoc').html(s);
+            });
+        });
+    });
+</script>
+
+<div class="container-fluid">
+    <h3 class="text-center">DANH SÁCH LỚP HỌC PHẦN</h3>
+    <div class="row">
+        <div class="col-6 row">
+            <label for="myInput" class="col-sm-2 col-form-label">Tìm Kiếm</label>
+            <div class="col-10">
+                <input type="text" class="form-control" id="myInput">
+            </div>
+        </div>
+        <div class="col-6 text-right">
+            <a href="#" id ="addlhp" class="rounded rounded-circle btn btn-success text-light pl-lg-2 pr-lg-2 pt-1 pb-1"
+                data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i>
+            </a>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-condensed mt-5" id="myTable">
+        <thead>
+            <tr align="center">
+                <th>STT</th>
+                <th>Mã Lớp Học Phần</th>
+                <th>Tên Lớp Học Phần</th>
+                <th>Tên Môn Học</th>
+                <th>Chức Năng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% classStudies.forEach(function(classStudy,index) { %>
+            <tr align="center" id="<%- classStudy.id %>">
+                <td><%- index+1 %></td>
+                <td><%= classStudy.ma_lop_hp %></td>
+                <td><a href="/home/modules/<%= classStudy.ma_lop_hp %>" ><%- classStudy.ten_lop_hp %></a></td>
+                <td><%- classStudy.ten_mon_hoc %></td>
+                <td>
+                    <a id="edit" href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- classStudy.id %>"
+                        class="btn btn-warning text-light">
+                        Sửa
+                    </a>
+
+                    <a class="btn btn-danger text-light" data-toggle="modal"
+                        data-target="#Modal<%- classStudy.id %>">Xóa</a>
+                </td>
+            </tr>
+            <div class="modal fade" id="Modal<%- classStudy.id %>" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Xóa Lớp Học Phần</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Xóa Lớp Học Phần <%- classStudy.ten_lop_hp %>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                            <button type="button" name="delete" data-dismiss="modal" value="<%- classStudy.id %>"
+                                class="btn btn-primary">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="exampleModal<%- classStudy.id %>" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Chỉnh Sửa Lớp Học Phần</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form class="p-2" action="/home/modules/update" method="POST">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Mã Lớp Học Phần</label>
+                                    <input type="text" class="form-control" name="ma_lop_hp"
+                                        value="<%= classStudy.ma_lop_hp %>" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Tên Lớp Học Phần</label>
+                                    <input type="text" class="form-control" name="ten_lop_hp"
+                                        value="<%- classStudy.ten_lop_hp %>" />
+                                </div>
+                                <div class="form-group">
+                                    <label class="font-weight-bold">Môn Học</label>
+                                    <select class="form-control" name="ma_mon_hoc">
+                                        <% subjects.forEach(function(subject) { %>
+                                            <option value="<%= subject.ma_mon_hoc %>" <% if (subject.ten_mon_hoc == classStudy.ten_mon_hoc) { %> selected <% } %> >
+                                            <%= subject.ten_mon_hoc %>
+                                            </option>
+                                        <% }) %>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" value="<%- classStudy.id %>" class="btn btn-success w-25"
+                                    name="id">Lưu</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <% }); %>
+        </tbody>
+    </table>
+</div>
+<div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm Môn Học</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form class="p-2" method="post" action="/home/modules/add">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Mã Lớp Học Phần</label>
+                        <input type="text" class="form-control" name="ma_lop_hp" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tên Lớp Học Phần</label>
+                        <input type="text" class="form-control" name="ten_lop_hp" value="" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Môn Học</label>
+                        <select class="form-control" id="mon_hoc" name="mon_hoc"></select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success w-25">Thêm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

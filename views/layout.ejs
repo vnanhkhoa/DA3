@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <base href="http://localhost:3000">
+  <meta charset="UTF-8">
+  <title>
+    <%-title %>
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <script src="assets/js/scripts.js"></script>
+  <script src="//cdn.ckeditor.com/4.13.0/full/ckeditor.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/css/css.css">
+  <link rel="stylesheet" href="//use.fontawesome.com/releases/v5.1.0/css/all.css"
+    integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&amp;subset=vietnamese" rel="stylesheet">
+  <script>
+    var url = location.protocol + '//' + location.hostname + ':' + location.port + '/';
+  </script>
+</head>
+
+<body>
+  <% if (title != "Login") { %>
+  <head>
+    <%- include('page/menu');%>
+  </head>
+  <main>
+    <div class="new-wrapper">
+      <nav class="navbar navbar-expand-lg navbar-light m-0">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mr-5">
+            <li class="nav-item dropdown active pr-5" style="cursor: default">
+              <a class="nav-link" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <img src="assets/img/img.jpg" alt="">
+                <%- user %>
+              </a>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="login/logout">Logout <span class="ml-5"><i
+                      class="fas fa-sign-out-alt"></i></span> </a>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </nav>
+      <div id="main" style="background:white">
+        <% } %>
+        <div id="main-contents">
+          <%-body %>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>
