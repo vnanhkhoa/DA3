@@ -319,27 +319,69 @@ module.exports = {
     },
 
     calendar: (req, res) => {
+<<<<<<< HEAD
         var sql = "SELECT * FROM `giao_vien` AS gv,`lich_hoc` as lh,`lop_hoc_phan` as lhp where lh.`ma_lop_hp` = lhp.`ma_lop_hp` AND lh.mgv = gv.mgv;";
+=======
+        var sql = "SELECT * FROM `giao_vien` AS gv,`lich_hoc` as lh,`lop_hoc_phan` as lhp,`phong_hoc` where phong_hoc.ma_phong=lh.ma_phong AND lh.`ma_lop_hp` = lhp.`ma_lop_hp` AND lh.mgv = gv.mgv;";
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             var sql_mh = "SELECT * FROM `mon_hoc`"
             connection.query(sql_mh, (err, mon_hoc) => {
                 if (err) throw err;
+<<<<<<< HEAD
                 res.render('page/calendar', {
                     title: 'Calendar',
                     user: res.locals.user,
                     calenders: rows,
                     subjects : mon_hoc
+=======
+                var listDate = [
+                    ['T2','Thứ Hai'],['T3','Thứ Ba'],
+                    ['T4','Thứ Tư'],['T5','Thứ Năm'],
+                    ['T6','Thứ Sáu'],['T7','Thứ Bảy'],
+                    ['CN','Chủ Nhật']
+                ]
+                res.render('page/calendar', {
+                    title: 'Calendar',
+                    user: res.locals.user,
+                    calendars: rows,
+                    subjects : mon_hoc,
+                    listDate:listDate
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
                 })
             })
         })
     },
 
+<<<<<<< HEAD
     lhp_calendar: (req, res) => {
         var sql = "SELECT * FROM `lop_hoc_phan` WHERE ma_mon_hoc='"+req.params.id+"'";
+=======
+    select_col: (req, res) => {
+        var sql = "SELECT * FROM `"+req.params.table+"` WHERE "+req.params.col+"='"+req.params.val+"'";
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             res.send(rows);
         })
     },
+<<<<<<< HEAD
+=======
+
+    calendar_add: (req,res) => {
+        var sql = "INSERT INTO `lich_hoc`(`tiet_hoc`, `thoi_gian`, `ma_phong`, `ma_lop_hp`, `mgv`) VALUES (?,?,?,?,?)";
+        var calendar = [
+            req.body.bat_dau+"->"+req.body.ket_thuc,
+            req.body.thuadd,
+            req.body.phong,
+            req.body.lop_hp,
+            req.body.giao_vien,
+        ];
+        connection.query(sql,calendar,(err,result) => {
+            if (err) throw err;
+            res.redirect("/home/calendar");
+        }) 
+    },
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
 }

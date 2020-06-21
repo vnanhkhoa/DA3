@@ -19,7 +19,12 @@ router.get('/subject', homeController.subject);
 router.post('/subject/add', homeController.insert_subject);
 router.post('/subject/update', homeController.update_subject);
 router.get('/calendar', homeController.calendar);
+<<<<<<< HEAD
 router.get('/calendar/modules/:id', homeController.lhp_calendar);
+=======
+router.post('/calendar/add', homeController.calendar_add);
+router.get('/:table/:col/:val', homeController.select_col);
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
 router.get('/modules', homeController.lop_hoc_phan);
 router.get('/modules/:lop', homeController.show_lop_hp);
 router.get('/modules/addsv/:ma_mon_hoc', homeController.select_addSV);

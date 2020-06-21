@@ -6,8 +6,12 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var connection = require('./connection.js');
 var HomeRouter = require('./routers/home.router');
+<<<<<<< HEAD
 var LoginRouter = require('./routers/login.router')
 
+=======
+var LoginRouter = require('./routers/login.router');
+>>>>>>> f76bba4970303b228a414810e77099826ebe103d
 
 const app = express();
 var http = require('http').createServer(app);
