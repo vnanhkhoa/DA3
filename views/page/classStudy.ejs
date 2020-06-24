@@ -1,4 +1,4 @@
-<script>
+<script charset="UTF-8">
     $(document).ready(function () {
         $("#myInput").on("keyup", function () {
             var search = $(this).val().toLowerCase();
@@ -8,23 +8,13 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
-            $.get(url + "home/delete/lop_hoc_phan/" + id, function (data) {
+            $.get(url + "admin/delete/lop_hoc_phan/id/" + id, function (data) {
                 console.log(data)
                 if (data == true) {
                     $("#myTable #" + id).fadeTo(500, 0, function () {
                         $(this).remove();
                     });
                 }
-            });
-        });
-
-        $("#addlhp").click(() => {
-            $.get(url + "home/mon_hoc/", function (data) {
-                var s = "";
-                data.forEach((subject) => {
-                    s = s + "<option value='"+subject.ma_mon_hoc+"'>"+subject.ten_mon_hoc+"</option>";
-                });
-                $('#mon_hoc').html(s);
             });
         });
     });
@@ -40,7 +30,7 @@
             </div>
         </div>
         <div class="col-6 text-right">
-            <a href="#" id ="addlhp" class="rounded rounded-circle btn btn-success text-light pl-lg-2 pr-lg-2 pt-1 pb-1"
+            <a href="#" id="addlhp" class="rounded rounded-circle btn btn-success text-light pl-lg-2 pr-lg-2 pt-1 pb-1"
                 data-toggle="modal" data-target="#add"><i class="fas fa-plus"></i>
             </a>
         </div>
@@ -60,11 +50,11 @@
             <tr align="center" id="<%- classStudy.id %>">
                 <td><%- index+1 %></td>
                 <td><%= classStudy.ma_lop_hp %></td>
-                <td><a href="/home/modules/<%= classStudy.ma_lop_hp %>" ><%- classStudy.ten_lop_hp %></a></td>
+                <td><a href="/admin/modules/<%= classStudy.ma_lop_hp %>"><%- classStudy.ten_lop_hp %></a></td>
                 <td><%- classStudy.ten_mon_hoc %></td>
                 <td>
-                    <a id="edit" href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- classStudy.id %>"
-                        class="btn btn-warning text-light">
+                    <a id="edit" href="javascript:void(0);" data-toggle="modal"
+                        data-target="#exampleModal<%- classStudy.id %>" class="btn btn-warning text-light">
                         Sửa
                     </a>
 
@@ -103,7 +93,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="p-2" action="/home/modules/update" method="POST">
+                        <form class="p-2" action="/admin/modules/update" method="POST">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="font-weight-bold">Mã Lớp Học Phần</label>
@@ -119,9 +109,10 @@
                                     <label class="font-weight-bold">Môn Học</label>
                                     <select class="form-control" name="ma_mon_hoc">
                                         <% subjects.forEach(function(subject) { %>
-                                            <option value="<%= subject.ma_mon_hoc %>" <% if (subject.ten_mon_hoc == classStudy.ten_mon_hoc) { %> selected <% } %> >
+                                        <option value="<%= subject.ma_mon_hoc %>"
+                                            <% if (subject.ten_mon_hoc == classStudy.ten_mon_hoc) { %> selected <% } %>>
                                             <%= subject.ten_mon_hoc %>
-                                            </option>
+                                        </option>
                                         <% }) %>
                                     </select>
                                 </div>
@@ -147,7 +138,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="p-2" method="post" action="/home/modules/add">
+            <form class="p-2" method="post" action="/admin/modules/add">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="font-weight-bold">Mã Lớp Học Phần</label>
@@ -159,7 +150,13 @@
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Môn Học</label>
-                        <select class="form-control" id="mon_hoc" name="mon_hoc"></select>
+                        <select class="form-control" id="mon_hoc" name="mon_hoc">
+                            <% subjects.forEach(function(subject) { %>
+                            <option value="<%= subject.ma_mon_hoc %>">
+                                <%= subject.ten_mon_hoc %>
+                            </option>
+                            <% }) %>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">

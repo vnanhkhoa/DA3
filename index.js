@@ -5,13 +5,8 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var connection = require('./connection.js');
-var HomeRouter = require('./routers/home.router');
-<<<<<<< HEAD
-var LoginRouter = require('./routers/login.router')
-
-=======
+var AdminRouter = require('./routers/admin.router');
 var LoginRouter = require('./routers/login.router');
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
 
 const app = express();
 var http = require('http').createServer(app);
@@ -40,7 +35,7 @@ app.use(
     })
 );
 app.use('/login', LoginRouter)
-app.use('/home', check, HomeRouter)
+app.use('/admin', check, AdminRouter)
 
 app.use(bodyParser.json());
 

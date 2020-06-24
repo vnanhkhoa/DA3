@@ -8,7 +8,7 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
-            $.get(url + "home/delete/giao_vien/" + id, function (data) {
+            $.get(url + "admin/delete/giao_vien/id/" + id, function (data) {
                 console.log(data)
                 if (data == true) {
                     $("#myTable #" + id).fadeTo(500, 0, function () {
@@ -96,7 +96,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="p-2" action="/home/teacher/update" method="POST">
+                        <form class="p-2" action="/admin/teacher/update" method="POST">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="font-weight-bold">Mã Giáo Viên</label>
@@ -110,8 +110,7 @@
                                     <label class="font-weight-bold">Email</label>
                                     <input type="email" class="form-control" name="email"
                                         value="<%- teacher.email %>" />
-                                    <input type="hidden" name="email_old"
-                                        value="<%- teacher.email %>" />
+                                    <input type="hidden" name="email_old" value="<%- teacher.email %>" />
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Số Điện Thoại</label>
@@ -139,25 +138,23 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="p-2" method="post" action="/home/teacher/add">
+            <form class="p-2" method="post" action="/admin/teacher/add">
                 <div class="modal-body">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label class="font-weight-bold">Mã Giáo Viên</label>
-                            <input type="text" class="form-control" name="mgv" />
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Họ & Tên</label>
-                            <input type="text" class="form-control" name="ten" />
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Email</label>
-                            <input type="email" class="form-control" name="email" />
-                        </div>
-                        <div class="form-group">
-                            <label class="font-weight-bold">Số Điện Thoại</label>
-                            <input type="text" class="form-control" name="sdt" />
-                        </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Mã Giáo Viên</label>
+                        <input type="text" class="form-control" name="mgv" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Họ & Tên</label>
+                        <input type="text" class="form-control" name="ten" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Email</label>
+                        <input type="email" class="form-control" name="email" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Số Điện Thoại</label>
+                        <input type="text" class="form-control" name="sdt" />
                     </div>
                 </div>
                 <div class="modal-footer">

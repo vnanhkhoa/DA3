@@ -16,7 +16,7 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
-            $.get(url + "home/delete/ct_lop_hp/" + id, function (data) {
+            $.get(url + "admin/delete/ct_lop_hp/id/" + id, function (data) {
                 console.log(data)
                 if (data == true) {
                     $("#myTable #" + id).fadeTo(500, 0, function () {
@@ -27,7 +27,7 @@
         });
 
         $("#addSV").click(function () {
-            $.get(url + "home/modules/addsv/" + ma_mon_hoc, function (data) {
+            $.get(url + "admin/modules/addsv/" + ma_mon_hoc, function (data) {
                 var s = "";
                 data.forEach(function (student, index) {
                     if (liststudent.length > 0) {
@@ -89,7 +89,7 @@
 
         $("button[name='saveSV']").click(function () {
             var lop = $("#addSV").attr("ma-lop-hp");
-            $.post(url + "home/modules/addSV", {
+            $.post(url + "admin/modules/addSV", {
                 ma_lop_hp: lop,
                 msv: liststudent.toString(),
                 mmh: ma_mon_hoc
@@ -106,7 +106,7 @@
         })
         $("button[name='id']").click(function () {
             var id = $(this).val();
-            $.post(url + "home/modules/editSV",{id: id,ma_lop_hp:mlhp}, function (data) {
+            $.post(url + "admin/modules/editSV",{id: id,ma_lop_hp:mlhp}, function (data) {
                if (data == true) {
                     location.href = window.location.href;
                 }

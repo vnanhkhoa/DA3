@@ -1,9 +1,5 @@
 <script>
     $(document).ready(function () {
-<<<<<<< HEAD
-=======
-
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
         $("#myInput").on("keyup", function () {
             var search = $(this).val().toLowerCase();
             $("#myTable tbody tr").filter(function () {
@@ -12,7 +8,7 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
-            $.get(url + "home/delete/mon_hoc/" + id, function (data) {
+            $.get(url + "admin/delete/lich_hoc/ma_lich/" + id, function (data) {
                 console.log(data)
                 if (data == true) {
                     $("#myTable #" + id).fadeTo(500, 0, function () {
@@ -22,37 +18,9 @@
             });
         });
 
-<<<<<<< HEAD
-
         $("select[name='mon_hoc']").on('change', function () {
             var id = this.value;
-            $.get(url + "home/calendar/modules/" + id, function (data) {
-=======
-        $("select[name='thuadd']").on('change', function () {
-            var id = this.value;
-            $.get(url + "home/lich_hoc/thoi_gian/" + id, function (data) {
-                // var s = "";
-                var bd = [];
-                var kt = [];
-                data.forEach((th) => {
-                    // s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject.ten_lop_hp + "</option>";
-                    if (bd.indexOf(th.tiet_hoc.slice(0,1)) == -1) {
-                        bd.push(th.tiet_hoc.slice(0,1));
-                    }
-                    if (kt.indexOf(th.tiet_hoc.slice(3).trim()) == -1) {
-                        kt.push(th.tiet_hoc.slice(3).trim());
-                    }
-                });
-                // $("select[name='lop_hp']").html(s);
-                console.log(bd);
-                console.log(kt);
-            });
-        });
-
-        $("select[name='mon_hoc']").on('change', function () {
-            var id = this.value;
-            $.get(url + "home/lop_hoc_phan/ma_mon_hoc/" + id, function (data) {
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
+            $.get(url + "admin/select/lop_hoc_phan/ma_mon_hoc/" + id, function (data) {
                 var s = "";
                 data.forEach((subject) => {
                     s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject
@@ -64,12 +32,8 @@
 
         $("#addlh").on('click', function () {
             var id = $("select[name='mon_hoc']").val();
-<<<<<<< HEAD
-            $.get(url + "home/calendar/modules/" + id, function (data) {
-=======
             var thu = $("select[name='thuadd']").val();
-            $.get(url + "home/lop_hoc_phan/ma_mon_hoc/" + id, function (data) {
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
+            $.get(url + "admin/select/lop_hoc_phan/ma_mon_hoc/" + id, function (data) {
                 var s = "";
                 data.forEach((subject) => {
                     s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject
@@ -77,9 +41,7 @@
                 });
                 $("select[name='lop_hp']").html(s);
             });
-<<<<<<< HEAD
-=======
-            $.get(url + "home/giao_vien/", function (data) {
+            $.get(url + "admin/giao_vien/", function (data) {
                 var s = "";
                 data.forEach((teacher) => {
                     s = s + "<option value='" + teacher.mgv + "'>" + teacher
@@ -87,15 +49,40 @@
                 });
                 $("select[name='giao_vien']").html(s);
             });
-            $.get(url + "home/phong_hoc/", function (data) {
+        });
+
+        $("button[name='editlh']").on('click', function () {
+            var id = $(this).val();
+            var ml = $("select#" + id + " option:selected").val();
+            var tenlhp = $("div." + id + " select[name='lop_hp']").attr("tenlhp");
+            var gv = $("div." + id + " select[name='giao_vien']").attr("mgv");
+            $.get(url + "admin/select/lop_hoc_phan/ma_mon_hoc/" + ml, function (data) {
                 var s = "";
-                data.forEach((phong) => {
-                    s = s + "<option value='" + phong.ma_phong + "'>" + phong
-                        .ten_phong + "</option>";
+                data.forEach((subject) => {
+                    if (tenlhp==subject.ten_lop_hp) {
+                        s = s + "<option value='" + subject.ma_lop_hp + "' selected>" + subject
+                        .ten_lop_hp + "</option>";
+                    } else {
+                        s = s + "<option value='" + subject.ma_lop_hp + "'>" + subject
+                        .ten_lop_hp + "</option>";
+                    }
                 });
-                $("select[name='phong']").html(s);
+                $("div." + id + " select[name='lop_hp']").html(s);
             });
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
+            console.log(gv)
+            $.get(url + "admin/giao_vien/", function (data) {
+                var s = "";
+                data.forEach((teacher) => {
+                    if (gv==teacher.mgv) {
+                        s = s + "<option value='" + teacher.mgv + "' selected>" + teacher
+                        .ten + "</option>";
+                    } else {
+                        s = s + "<option value='" + teacher.mgv + "'>" + teacher
+                        .ten + "</option>";
+                    }
+                });
+                $("select[name='giao_vien']").html(s);
+            });
         });
     });
 </script>
@@ -120,33 +107,16 @@
             <tr align="center">
                 <th>STT</th>
                 <th>Tên Lớp Học Phần</th>
-<<<<<<< HEAD
-                <th>Tiết</th>
-                <th>Thời Gian</th>
-=======
                 <th>Thời Gian</th>
                 <th>Tiết</th>
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                 <th>Phòng</th>
                 <th>Giáo Viên</th>
                 <th>Chức Năng</th>
             </tr>
         </thead>
         <tbody>
-<<<<<<< HEAD
-            <% calenders.forEach(function(calender,index) { %>
-            <tr align="center" id="<%- calender.id %>">
-                <td><%- index+1 %></td>
-                <td><%- calender.ten_lop_hp %></td>
-                <td><%- calender.tiet_hoc %></td>
-                <td><%- calender.ten_lop_hp %></td>
-                <td><%- calender.phong %></td>
-                <td><%- calender.ten %></td>
-                <td>
-                    <a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- calender.ma_lich %>"
-=======
             <% calendars.forEach(function(calendar,index) { %>
-            <tr align="center" id="<%- calendar.id %>">
+            <tr align="center" id="<%- calendar.ma_lich %>">
                 <td><%- index+1 %></td>
                 <td><%- calendar.ten_lop_hp %></td>
                 <td><% switch (calendar.thoi_gian) { case 'T2' : %>
@@ -168,7 +138,7 @@
                     Thứ Bảy
                     <% break;
                     case 'CN' : %>
-                    Thứ Chủ Nhật
+                    Chủ Nhật
                     <% break;
                     } %>
                 </td>
@@ -176,24 +146,16 @@
                 <td><%- calendar.ten_phong %></td>
                 <td><%- calendar.ten %></td>
                 <td>
-                    <a href="javascript:void(0);" data-toggle="modal" data-target="#exampleModal<%- calendar.ma_lich %>"
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
-                        class="btn btn-warning text-light">
+                    <button value="<%- calendar.ma_lich %>" name="editlh" data-toggle="modal"
+                        data-target="#exampleModal<%- calendar.ma_lich %>" class="btn btn-warning text-light">
                         Sửa
-                    </a>
+                    </button>
 
                     <a class="btn btn-danger text-light" data-toggle="modal"
-<<<<<<< HEAD
-                        data-target="#Modal<%- calender.ma_lich %>">Xóa</a>
-                </td>
-            </tr>
-            <div class="modal fade" id="Modal<%- calender.ma_lich %>" tabindex="-1" role="dialog"
-=======
                         data-target="#Modal<%- calendar.ma_lich %>">Xóa</a>
                 </td>
             </tr>
             <div class="modal fade" id="Modal<%- calendar.ma_lich %>" tabindex="-1" role="dialog"
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                 aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
@@ -204,19 +166,11 @@
                             </button>
                         </div>
                         <div class="modal-body">
-<<<<<<< HEAD
-                            Xóa Lịch Học Của <%- calender.ten_lop_hp %>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                            <button type="button" name="delete" data-dismiss="modal" value="<%- calender.ma_lich %>"
-=======
                             Xóa Lịch Học Của <%- calendar.ten_lop_hp %>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
                             <button type="button" name="delete" data-dismiss="modal" value="<%- calendar.ma_lich %>"
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                                 class="btn btn-primary">Xóa</button>
                         </div>
                     </div>
@@ -227,56 +181,34 @@
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-<<<<<<< HEAD
-                            <h5 class="modal-title" id="exampleModalLabel">Chỉnh Sửa Môn Học</h5>
-=======
                             <h5 class="modal-title" id="exampleModalLabel">Chỉnh Sửa Lịch Học</h5>
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="p-2" action="/home/subject/update" method="POST">
-                            <div class="modal-body">
-                                <div class="form-group">
-<<<<<<< HEAD
-                                    <label class="font-weight-bold">Mã Môn Học</label>
-                                    <input type="text" class="form-control" name="ma_mon_hoc"
-                                        value="<%= calendar.ma_mon_hoc %>" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="font-weight-bold">Tên Lớp</label>
-                                    <input type="text" class="form-control" name="ten_mon_hoc"
-                                        value="<%- calendar.ten_mon_hoc %>" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="font-weight-bold">Ngày Bắt Đầu</label>
-                                    <input type="date" class="form-control" name="bat_dau" value="<%- calendar %>" />
-                                </div>
-                                <div class="form-group">
-                                    <label class="font-weight-bold">Ngày Kết Thúc</label>
-                                    <input type="date" class="form-control" name="ket_thuc" value="<%- kt %>" />
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="submit" value="<%- calendar.id %>" class="btn btn-success w-25"
-=======
+                        <form class="p-2 " action="/admin/calendar/edit" method="POST">
+                            <div class="modal-body <%- calendar.ma_lich %>">
+                                <div class="form-group ">
                                     <label class="font-weight-bold">Môn Học</label>
-                                    <select class="form-control" name="mon_hoc">
+                                    <select class="form-control" name="mon_hoc" id="<%- calendar.ma_lich %>">
                                         <% subjects.forEach(function(subject) { %>
-                                        <option value="<%= subject.ma_mon_hoc %>"><%= subject.ten_mon_hoc %> </option>
+                                        <option value="<%= subject.ma_mon_hoc %>"
+                                            <%= (subject.ma_mon_hoc==calendar.ma_mon_hoc) ? "selected" : "" %>>
+                                            <%= subject.ten_mon_hoc %> </option>
                                         <% }) %>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Lớp Học Phần</label>
-                                    <select class="form-control" name="lop_hp"></select>
+                                    <select class="form-control" name="lop_hp" tenlhp="<%- calendar.ten_lop_hp %>"></select>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Thời Gian</label>
                                     <select class="form-control" name="thu">
                                         <% listDate.forEach(function(date) { %>
-                                        <option value="<%= date[0] %>" <%= (date[0]==calendar.thoi_gian) ? "selected" : "" %>><%= date[1] %> </option>
+                                        <option value="<%= date[0] %>"
+                                            <%= (date[0]==calendar.thoi_gian) ? "selected" : "" %>><%= date[1] %>
+                                        </option>
                                         <% }) %>
                                     </select>
                                 </div>
@@ -286,7 +218,9 @@
                                         <div class="col-4 m-0 p-0">
                                             <select class="form-control" name="bat_dau">
                                                 <% for (var i = 1; i <=10; i++) { %>
-                                                <option value="<%= i %>"> Tiết <%= i %> </option>
+                                                <option value="<%= i %>"
+                                                    <%= (i==Number(calendar.tiet_hoc.slice(0,1))) ? "selected" : "" %>>
+                                                    Tiết <%= i %> </option>
                                                 <% } %>
                                             </select>
                                         </div>
@@ -294,7 +228,9 @@
                                         <div class="col-4 m-0 p-0">
                                             <select class="form-control" name="ket_thuc">
                                                 <% for (var i = 1; i <=10; i++) { %>
-                                                <option value="<%= i %>"> Tiết <%= i %> </option>
+                                                <option value="<%= i %>"
+                                                    <%= (i==Number(calendar.tiet_hoc.slice(3))) ? "selected" : "" %>>
+                                                    Tiết <%= i %> </option>
                                                 <% } %>
                                             </select>
                                         </div>
@@ -302,17 +238,21 @@
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Phòng</label>
-                                    <select class="form-control" name="phong"></select>
+                                    <select class="form-control" name="phong">
+                                        <% rooms.forEach(function(room) { %>
+                                        <option value='<%- room.ma_phong %>'
+                                            <%= (room.ma_phong==calendar.ma_phong) ? "selected" : "" %>>
+                                            <%- room.ten_phong %></option>
+                                        <% }) %>
+                                    </select>
                                 </div>
                                 <div class="form-group">
                                     <label class="font-weight-bold">Giáo Viên</label>
-                                    <select class="form-control" name="giao_vien"></select>
+                                    <select class="form-control" name="giao_vien" mgv="<%- calendar.mgv%>"></select>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" value="<%- calendar.ma_lich %>" class="btn btn-success w-25"
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
-                                    name="id">Lưu</button>
+                                <button type="submit" value="<%- calendar.ma_lich %>" class="btn btn-success w-25" name="id">Lưu</button>
                             </div>
                         </form>
                     </div>
@@ -331,11 +271,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-<<<<<<< HEAD
-            <form class="p-2" method="post" action="/home/subject/add">
-=======
-            <form class="p-2" method="post" action="/home/calendar/add">
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
+            <form class="p-2" method="post" action="/admin/calendar/add">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="font-weight-bold">Môn Học</label>
@@ -349,8 +285,6 @@
                         <label class="font-weight-bold">Lớp Học Phần</label>
                         <select class="form-control" name="lop_hp"></select>
                     </div>
-<<<<<<< HEAD
-=======
                     <div class="form-group">
                         <label class="font-weight-bold">Thời Gian</label>
                         <select class="form-control" name="thuadd">
@@ -359,16 +293,11 @@
                             <% }) %>
                         </select>
                     </div>
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                     <div class="form-group row mt-4 mb-1">
                         <label class="font-weight-bold col-4 pt-1">Tiết Học</label>
                         <div class="form-group col-8 row p-0">
                             <div class="col-4 m-0 p-0">
-<<<<<<< HEAD
-                                <select class="form-control" name="tiet_hoc">
-=======
                                 <select class="form-control" name="bat_dau">
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                                     <% for (var i = 1; i <=10; i++) { %>
                                     <option value="<%= i %>"> Tiết <%= i %> </option>
                                     <% } %>
@@ -376,11 +305,7 @@
                             </div>
                             <div class="col-4 font-weight-bold pt-1 text-center"> --> </div>
                             <div class="col-4 m-0 p-0">
-<<<<<<< HEAD
-                                <select class="form-control" name="tiet_hoc">
-=======
                                 <select class="form-control" name="ket_thuc">
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                                     <% for (var i = 1; i <=10; i++) { %>
                                     <option value="<%= i %>"> Tiết <%= i %> </option>
                                     <% } %>
@@ -390,14 +315,11 @@
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Phòng</label>
-<<<<<<< HEAD
-                        <input type="text" class="form-control" name="phong" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-success w-25">Thêm</button>
-=======
-                        <select class="form-control" name="phong"></select>
+                        <select class="form-control" name="phong">
+                            <% rooms.forEach(function(room) { %>
+                            <option value='<%- room.ma_phong %>'><%- room.ten_phong %></option>
+                            <% }) %>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label class="font-weight-bold">Giáo Viên</label>
@@ -406,7 +328,6 @@
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-success w-25" name="add">Thêm</button>
->>>>>>> f76bba4970303b228a414810e77099826ebe103d
                 </div>
             </form>
         </div>

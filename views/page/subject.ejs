@@ -8,7 +8,7 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
-            $.get(url + "home/delete/mon_hoc/" + id, function (data) {
+            $.get(url + "admin/delete/mon_hoc/id/" + id, function (data) {
                 console.log(data)
                 if (data == true) {
                     $("#myTable #" + id).fadeTo(500, 0, function () {
@@ -17,10 +17,6 @@
                 }
             });
         });
-
-        // setInterval(function () {
-        //     console.log("Anh Khoa \n");
-        // }, 3000);
     });
 </script>
 
@@ -107,7 +103,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="p-2" action="/home/subject/update" method="POST">
+                        <form class="p-2" action="/admin/subject/update" method="POST">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="font-weight-bold">Mã Môn Học</label>
@@ -149,7 +145,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form class="p-2" method="post" action="/home/subject/add">
+            <form class="p-2" method="post" action="/admin/subject/add">
                 <div class="modal-body">
                     <div class="form-group">
                         <label class="font-weight-bold">Mã Môn Học</label>

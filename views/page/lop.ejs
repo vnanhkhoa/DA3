@@ -24,8 +24,8 @@
 			<% classes.forEach(function(lop,index) { %>
 			<tr align="center">
 				<td><%- index+1 %></td>
-				<td><a href="<%- lop.id %>"><%- lop.ma_lop %></a></td>
-				<td><%- lop.ten_lop %></td>
+				<td><%- lop.ma_lop %></td>
+				<td><a href="admin/class/<%- lop.ten_lop %>"><%- lop.ten_lop %></a></td>
 				<td>
 					<a
 						href="javascript:void(0);"
@@ -40,7 +40,6 @@
 						class="btn btn-danger text-light"
 						data-toggle="modal"
 						data-target="#Modal<%- lop.id %>"
-						
 						>Xóa</a
 					>
 				</td>
@@ -61,7 +60,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Trở về</button>
-                            <a href="home/class/delete/<%- lop.id %>" class="btn btn-primary">Xóa</a>
+                            <a href="admin/class/delete/<%- lop.id %>" class="btn btn-primary">Xóa</a>
                         </div>
                     </div>
                 </div>
@@ -82,7 +81,7 @@
 								<span aria-hidden="true">&times;</span>
 							</button>
 						</div>
-						<form class="p-2" action="/home/class/edit" method="POST">
+						<form class="p-2" action="/admin/class/edit" method="POST">
 							<div class="modal-body">
 								<div class="form-group">
 									<label class="font-weight-bold">MÃ LỚP</label>
@@ -113,7 +112,7 @@
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
-			<form class="p-2" method="post" action="/home/class/add">
+			<form class="p-2" method="post" action="/admin/class/add">
 				<div class="modal-body">
 					<div class="form-group">
 						<label class="font-weight-bold">Mã Lớp</label>

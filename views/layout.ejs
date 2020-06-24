@@ -8,6 +8,7 @@
     <%-title %>
   </title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <link rel="stylesheet" href="//stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -26,36 +27,37 @@
 
 <body>
   <% if (title != "Login") { %>
+
   <head>
     <%- include('page/menu');%>
   </head>
-  <main>
-    <div class="new-wrapper">
-      <nav class="navbar navbar-expand-lg navbar-light m-0">
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav ml-auto mr-5">
-            <li class="nav-item dropdown active pr-5" style="cursor: default">
-              <a class="nav-link" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
-                aria-expanded="false">
-                <img src="assets/img/img.jpg" alt="">
-                <%- user %>
-              </a>
-              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                <a class="dropdown-item" href="login/logout">Logout <span class="ml-5"><i
-                      class="fas fa-sign-out-alt"></i></span> </a>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div id="main" style="background:white">
-        <% } %>
-        <div id="main-contents">
-          <%-body %>
-        </div>
+  <div class="new-wrapper">
+    <nav class="navbar navbar-expand-lg navbar-light m-0">
+      <div class="collapse navbar-collapse" id="navbarSupportedContent" style="padding: 2px">
+        <ul class="navbar-nav ml-auto mr-5">
+          <li class="nav-item dropdown active pr-5" style="cursor: default">
+            <a class="nav-link" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+              aria-expanded="false">
+              <img src="assets/img/img.jpg" alt="">
+              <%- user %>
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="login/logout">Logout <span class="ml-5"><i
+                    class="fas fa-sign-out-alt"></i></span> </a>
+            </div>
+          </li>
+        </ul>
       </div>
+    </nav>
+    <div id="main" style="background:white">
+      <% } %>
+      <div id="main-contents">
+        <%-body %>
+      </div>
+      <% if (title != "Login") { %>
     </div>
-  </main>
+  </div>
+  <% } %>
 </body>
 
 </html>
