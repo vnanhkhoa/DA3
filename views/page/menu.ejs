@@ -15,6 +15,7 @@
      <div class="overflow-container">
        <div class="overflow-container">
          <ul class="menu-dropdown">
+         <% if (user == 'admin') { %>
            <li><a href="/admin">Home </a><span class="icon"><i class="fas fa-home"></i></span></li>
 
            <li>
@@ -28,6 +29,11 @@
            <li><a href="admin/subject/">Môn Học</a><span class="icon"><i class="fas fa-book"></i></span></li>
            <li><a href="admin/modules/">Lớp Học Phần</a><span class="icon"><i class="fas fa-chalkboard-teacher"></i></span></li>
            <li><a href="admin/calendar/">Lịch Học</a><span class="icon"><i class="fas fa-calendar"></i></span></li>
+           <% } else { %>
+              <li><a href="/">Home </a><span class="icon"><i class="fas fa-home"></i></span></li>
+              <li><a href="home/calendar/">Lịch Dạy</a><span class="icon"><i class="fas fa-calendar"></i></span></li>
+              <li><a href="home/point/">Nhập Điểm</a><span class="icon"><i class="fa fa-table"></i></span></li>
+           <% } %>
          </ul>
        </div>
 

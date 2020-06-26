@@ -16,11 +16,17 @@
         })
         $("button[name='delete']").click(function () {
             var id = $(this).val();
+            var msv = $(this).attr("msv");
             $.get(url + "admin/delete/ct_lop_hp/id/" + id, function (data) {
-                console.log(data)
                 if (data == true) {
-                    $("#myTable #" + id).fadeTo(500, 0, function () {
-                        $(this).remove();
+                    var x = "ma_sinh_vien='"+msv+"' AND ma_mon_hoc"
+                    $.get(url + "admin/delete/diem_hp/"+x+"/" + ma_mon_hoc, function (data) {
+                        console.log(data)
+                        if (data == true) {
+                            $("#myTable #" + id).fadeTo(500, 0, function () {
+                                $(this).remove();
+                            });
+                        }
                     });
                 }
             });
@@ -101,13 +107,16 @@
             })
         });
         var mlhp = ""
-        $(".lop_hp").change(function() {
+        $(".lop_hp").change(function () {
             mlhp = $(this).val();
         })
         $("button[name='id']").click(function () {
             var id = $(this).val();
-            $.post(url + "admin/modules/editSV",{id: id,ma_lop_hp:mlhp}, function (data) {
-               if (data == true) {
+            $.post(url + "admin/modules/editSV", {
+                id: id,
+                ma_lop_hp: mlhp
+            }, function (data) {
+                if (data == true) {
                     location.href = window.location.href;
                 }
             })
@@ -173,7 +182,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                            <button type="button" name="delete" data-dismiss="modal" value="<%- student.id %>"
+                            <button type="button" msv='<%= student.ma_sinh_vien %>' name="delete" data-dismiss="modal" value="<%- student.id %>"
                                 class="btn btn-primary">Xóa</button>
                         </div>
                     </div>
@@ -189,7 +198,7 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <form class="p-2"  method="POST">
+                        <form class="p-2" method="POST">
                             <div class="modal-body">
                                 <div class="form-group">
                                     <label class="font-weight-bold row ml-1"><span class="col-4">MÃ SINH VIÊN :</span>
@@ -208,7 +217,8 @@
                                     <select class="form-control lop_hp">
                                         <% list_lhp.forEach(function (lhp, index) { %>
                                         <option value="<%= lhp.ma_lop_hp %>"
-                                            <% if (student.ma_lop_hp == lhp.ma_lop_hp){ %>selected <% } %>><%= lhp.ten_lop_hp %></option>
+                                            <% if (student.ma_lop_hp == lhp.ma_lop_hp){ %>selected <% } %>>
+                                            <%= lhp.ten_lop_hp %></option>
                                         <% }) %>
                                     </select>
                                 </div>

@@ -7,6 +7,7 @@ var session = require('express-session');
 var connection = require('./connection.js');
 var AdminRouter = require('./routers/admin.router');
 var LoginRouter = require('./routers/login.router');
+var HomeRouter = require('./routers/home.router');
 
 const app = express();
 var http = require('http').createServer(app);
@@ -36,6 +37,7 @@ app.use(
 );
 app.use('/login', LoginRouter)
 app.use('/admin', check, AdminRouter)
+app.use('/home', check, HomeRouter)
 
 app.use(bodyParser.json());
 
@@ -57,25 +59,26 @@ connection.connect(function(err) {
 http.listen(port, () => console.log(`App listening at http://localhost:${port}`));
 
 app.get('/', check, (req, res) => {
-    // var x = connection.query('SELECT * FROM `mon_hoc`', function (error, results, fields) {
-    //     if (error) throw error;
-    //     for (var i = 0; i < results.length; i++) {
-    //         var row = results[i].ten_mon_hoc;
-    //         console.log(row)
-    //     }
-    // });
-    // console.log(x)
-
-    res.render("page/home", {
-        title: "Home",
-        user: res.locals.user,
+    var x = new Date();
+    var thu = ['T2','T3','T4','T5','T6','T7','CN'];
+    var sql = "SELECT lich_hoc.*,lop_hoc_phan.ten_lop_hp,phong_hoc.ten_phong FROM `giao_vien`,`lich_hoc`,`lop_hoc_phan`,`phong_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND giao_vien.mgv=lich_hoc.mgv AND giao_vien.email='"
+    +res.locals.user+"' AND lich_hoc.thoi_gian='"+thu[x.getDay-1]+"'"
+   connection.query(sql, function (error, results) {
+        if (error) throw error;
+        res.render("pageTeacher/home", {
+            title: "Home",
+            user: res.locals.user,
+            lich_day: results,
+        });
     });
 });
-// var x = new Date().toUTCString();
-// console.log(x);
+
 // setInterval(function() {
-//     if (x == new Date().toUTCString()) {
-//         console.log(x);
+//     var x = new Date();
+//     console.log(x.toDateString()+" "+x.toTimeString());
+//     if (x.toTimeString().split(" ")[0] == "23:14:00") {
+//         console.log(x.getDay())
 //     }
-//     console.log(new Date().toUTCString());
+//     // console.log(x.getDay())
+//     // console.log(new Date().toUTCString());
 // }, 1000);

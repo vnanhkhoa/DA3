@@ -3,9 +3,30 @@ var connection = require('../connection.js');
 module.exports = {
 
     home: (req, res) => {
-        res.render('page/home',{
-            title:"Home | Admin"
-        });
+        var sql = "SELECT COUNT(msv) AS msv FROM sinh_vien;"
+        connection.query(sql, (err, sv) => {
+            if (err) throw err;
+            var sql = "SELECT COUNT(mgv) AS mgv FROM giao_vien;"
+            connection.query(sql, (err, gv) => {
+                if (err) throw err;
+                var sql = "SELECT COUNT(ma_lop) AS lop FROM lop;"
+                connection.query(sql, (err, lop) => {
+                    if (err) throw err;
+                    var sql = "SELECT COUNT(id) AS tk FROM tai_khoan;"
+                    connection.query(sql, (err, tk) => {
+                        if (err) throw err;
+                        // var sql = "SELECT COUNT(id) AS tk FROM tai_khoan;"
+                        res.render('page/homead',{
+                            title:"Home | Admin",
+                            sv : sv[0].msv,
+                            gv : gv[0].mgv,
+                            lop : lop[0].lop,
+                            tk : tk[0].tk,
+                        });
+                    })
+                })
+            })
+        })
     },
 
     select: (req, res) => {
@@ -120,7 +141,7 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        var sql = "DELETE FROM `" + req.params.table + "` WHERE `"+req.params.col+"`=" + req.params.id;
+        var sql = "DELETE FROM `" + req.params.table + "` WHERE "+req.params.col+"='" + req.params.id + "'";
         if (req.params.table == "sinh_vien" | req.params.table == "giao_vien") {
             sql = "DELETE `tai_khoan`,`" + req.params.table + "` FROM `tai_khoan`,`" + req.params.table + "` WHERE tai_khoan.id = " +
                 req.params.table + ".ma_tai_khoan AND " + req.params.table + ".id = '" + req.params.id + "'";

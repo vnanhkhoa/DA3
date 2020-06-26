@@ -22,6 +22,9 @@
   <link href="https://fonts.googleapis.com/css?family=Roboto&amp;subset=vietnamese" rel="stylesheet">
   <script>
     var url = location.protocol + '//' + location.hostname + ':' + location.port + '/';
+    $(document).ready(function () {
+      $("input[name='path']").val(window.location.href);
+    })
   </script>
 </head>
 
@@ -42,10 +45,44 @@
               <%- user %>
             </a>
             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <% if (user != "admin") {  %>
+              <a class="dropdown-item" href="javascript:void(0);" data-toggle="modal" data-target="#editpass">Đổi Mật
+                Khẩu</a>
+              <% } %>
               <a class="dropdown-item" href="login/logout">Logout <span class="ml-5"><i
                     class="fas fa-sign-out-alt"></i></span> </a>
             </div>
           </li>
+          <div class="modal fade" id="editpass" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLabel">Đổi Mật Khẩu</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <form class="p-2" method="post" action="/home/editpass">
+                  <div class="modal-body">
+                    <div class="form-group">
+                      <label class="font-weight-bold">Mật Khẩu Cũ</label>
+                      <input type="text" class="form-control" name="pass_old" value="" />
+                    </div>
+                    <div class="form-group">
+                      <label class="font-weight-bold">Mật Khẩu Mới</label>
+                      <input type="text" class="form-control" name="pass_new" value="" />
+                      <input type="hidden" class="form-control" name="path" value="" />
+                      <input type="hidden" class="form-control" name="user" value="<%= user%>" />
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-success w-25" name="add">Lưu</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
         </ul>
       </div>
     </nav>
@@ -58,6 +95,7 @@
     </div>
   </div>
   <% } %>
+
 </body>
 
 </html>
