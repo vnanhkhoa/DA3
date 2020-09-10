@@ -21,40 +21,26 @@ module.exports = {
         })
     },
 
-    calendar : (req, res) => {
+    calendarToday : (req, res) => {
         var now = new Date();
+        var thu = ['T2','T3','T4','T5','T6','T7','CN'];
+        var sql = "SELECT lich_hoc.*,lop_hoc_phan.ten_lop_hp,phong_hoc.ten_phong,"
+        +"ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
+        +"`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
+        +"AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
+        +" AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='"+req.params.msv+"' "
+        +"AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE() AND lich_hoc.thoi_gian='"+thu[now.getDay() - 1]+"'";
+        queryCalendars(res,sql);
+    },
+
+    calendar : (req, res) => {
         var sql = "SELECT lich_hoc.*,lop_hoc_phan.ten_lop_hp,phong_hoc.ten_phong,"
         +"ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
         +"`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
         +"AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
         +" AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='"+req.params.msv+"' "
         +"AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE()";
-        connection.query(sql, (err, rows) => {
-            if (err) throw err;
-            var list = [];
-            var listmh = [];
-            rows.forEach((lich_hoc,index) => {
-                var lichhoc = {}
-                lichhoc.lich_hoc = [];
-                var time = {};
-                var i = listmh.indexOf(lich_hoc.ten_mon_hoc);
-                if (i == -1) {
-                    lichhoc.monhoc = lich_hoc.ten_mon_hoc;
-                    listmh.push(lich_hoc.ten_mon_hoc);
-                    time.tiet_hoc = lich_hoc.tiet_hoc;
-                    time.ten_phong = lich_hoc.ten_phong;
-                    time.thoi_gian = lich_hoc.thoi_gian;
-                    lichhoc.lich_hoc.push(time);
-                    list.push(lichhoc);
-                } else {
-                    time.tiet_hoc = lich_hoc.tiet_hoc;
-                    time.ten_phong = lich_hoc.ten_phong;
-                    time.thoi_gian = lich_hoc.thoi_gian;
-                    list[i].lich_hoc.push(time);
-                }
-            })
-            res.send(list);
-        })
+        queryCalendars(res,sql);
     },
 
     updateSV: (req, res) => {
@@ -69,7 +55,26 @@ module.exports = {
         var sql = "UPDATE sinh_vien SET ? WHERE msv ='" + req.body.msv+ "'";
         connection.query(sql, user,(err, rows) => {
             if (err) throw err;
-            res.send(true);
+            if (rows.changedRows == 1) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
+        })
+    },
+
+    edit_password : (req, res) => {
+        var user = req.body.email;
+        var pass_old = req.body.pass_old;
+        var pass_new = req.body.pass_new;
+        var sql = "UPDATE `tai_khoan` SET `mat_khau`='"+pass_new+"' WHERE `mat_khau`='"+pass_old+"' AND ten_tai_khoan='"+user+"'";
+        connection.query(sql, (err, rows) => {
+            if (err) throw err;
+            if (rows.changedRows == 1) {
+                res.send(true);
+            } else {
+                res.send(false);
+            }
         })
     },
 
@@ -81,4 +86,33 @@ module.exports = {
             res.send(rows);
         })
     }
+}
+
+function queryCalendars(res,sql) {
+    connection.query(sql, (err, rows) => {
+        if (err) throw err;
+        var list = [];
+        var listmh = [];
+        rows.forEach((lich_hoc,index) => {
+            var lichhoc = {}
+            lichhoc.lich_hoc = [];
+            var time = {};
+            var i = listmh.indexOf(lich_hoc.ten_mon_hoc);
+            if (i == -1) {
+                lichhoc.monhoc = lich_hoc.ten_mon_hoc;
+                listmh.push(lich_hoc.ten_mon_hoc);
+                time.tiet_hoc = lich_hoc.tiet_hoc;
+                time.ten_phong = lich_hoc.ten_phong;
+                time.thoi_gian = lich_hoc.thoi_gian;
+                lichhoc.lich_hoc.push(time);
+                list.push(lichhoc);
+            } else {
+                time.tiet_hoc = lich_hoc.tiet_hoc;
+                time.ten_phong = lich_hoc.ten_phong;
+                time.thoi_gian = lich_hoc.thoi_gian;
+                list[i].lich_hoc.push(time);
+            }
+        })
+        res.send(list);
+    })
 }
