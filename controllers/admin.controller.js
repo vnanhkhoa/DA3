@@ -1,5 +1,6 @@
 var connection = require('../connection.js');
-
+var json2xls = require('json2xls');
+var fs = require("fs");
 module.exports = {
 
     home: (req, res) => {
@@ -15,13 +16,12 @@ module.exports = {
                     var sql = "SELECT COUNT(id) AS tk FROM tai_khoan;"
                     connection.query(sql, (err, tk) => {
                         if (err) throw err;
-                        // var sql = "SELECT COUNT(id) AS tk FROM tai_khoan;"
-                        res.render('page/homead',{
-                            title:"Home | Admin",
-                            sv : sv[0].msv,
-                            gv : gv[0].mgv,
-                            lop : lop[0].lop,
-                            tk : tk[0].tk,
+                        res.render('page/homead', {
+                            title: "Home | Admin",
+                            sv: sv[0].msv,
+                            gv: gv[0].mgv,
+                            lop: lop[0].lop,
+                            tk: tk[0].tk,
                         });
                     })
                 })
@@ -36,7 +36,7 @@ module.exports = {
         })
     },
     select_addSV: (req, res) => {
-        var sql = "SELECT `sinh_vien`.*,`lop`.`ten_lop` FROM `sinh_vien`,`lop` WHERE sinh_vien.ma_lop = lop.id AND `msv` NOT IN(SELECT `ma_sinh_vien` FROM `ct_lop_hp`,`lop_hoc_phan` WHERE ct_lop_hp.`ma_lop_hp`= lop_hoc_phan.ma_lop_hp AND lop_hoc_phan.ma_mon_hoc = '"+req.params.ma_mon_hoc+"')";
+        var sql = "SELECT `sinh_vien`.*,`lop`.`ten_lop` FROM `sinh_vien`,`lop` WHERE sinh_vien.ma_lop = lop.id AND `msv` NOT IN(SELECT `ma_sinh_vien` FROM `ct_lop_hp`,`lop_hoc_phan` WHERE ct_lop_hp.`ma_lop_hp`= lop_hoc_phan.ma_lop_hp AND lop_hoc_phan.ma_mon_hoc = '" + req.params.ma_mon_hoc + "')";
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             res.send(rows);
@@ -49,14 +49,14 @@ module.exports = {
         var listmsv = req.body.msv.split(",");
         var s = [];
         var s2 = [];
-        for (var i = 0; i < listmsv.length;i++) {
-            s.push("('"+req.body.ma_lop_hp+"','"+listmsv[i]+"')");
-            s2.push("('"+req.body.mmh+"','"+listmsv[i]+"')");
+        for (var i = 0; i < listmsv.length; i++) {
+            s.push("('" + req.body.ma_lop_hp + "','" + listmsv[i] + "')");
+            s2.push("('" + req.body.mmh + "','" + listmsv[i] + "')");
         }
-        connection.query(sql+s.toString(),(err, rows) => {
+        connection.query(sql + s.toString(), (err, rows) => {
             if (err) throw err;
             var sql_diem = "INSERT INTO `diem_hp`(`ma_mon_hoc`, `ma_sinh_vien`) VALUES "
-            connection.query(sql_diem+s2.toString(),(error, results) => {
+            connection.query(sql_diem + s2.toString(), (error, results) => {
                 if (error) throw error;
                 res.send(true);
             })
@@ -65,7 +65,7 @@ module.exports = {
 
     editSV_lhp: (req, res) => {
         console.log(req.body);
-        var sql = "UPDATE `ct_lop_hp` SET `ma_lop_hp`='"+req.body.ma_lop_hp+"' WHERE `id`= "+ req.body.id;
+        var sql = "UPDATE `ct_lop_hp` SET `ma_lop_hp`='" + req.body.ma_lop_hp + "' WHERE `id`= " + req.body.id;
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             res.send(true);
@@ -85,11 +85,11 @@ module.exports = {
     },
 
     lop_student: (req, res) => {
-        var sql = "SELECT sinh_vien.*,lop.ten_lop FROM `sinh_vien`,`lop` WHERE sinh_vien.ma_lop = lop.id AND lop.ten_lop ='"+req.params.lop+"'"
+        var sql = "SELECT sinh_vien.*,lop.ten_lop FROM `sinh_vien`,`lop` WHERE sinh_vien.ma_lop = lop.id AND lop.ten_lop ='" + req.params.lop + "'"
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             var sql = "SELECT * FROM `lop`";
-            connection.query(sql, (loi,lop) => {
+            connection.query(sql, (loi, lop) => {
                 if (loi) throw loi;
                 res.render('page/listStudentClass', {
                     title: req.params.lop,
@@ -141,7 +141,7 @@ module.exports = {
     },
 
     delete: (req, res) => {
-        var sql = "DELETE FROM `" + req.params.table + "` WHERE "+req.params.col+"='" + req.params.id + "'";
+        var sql = "DELETE FROM `" + req.params.table + "` WHERE " + req.params.col + "='" + req.params.id + "'";
         if (req.params.table == "sinh_vien" | req.params.table == "giao_vien") {
             sql = "DELETE `tai_khoan`,`" + req.params.table + "` FROM `tai_khoan`,`" + req.params.table + "` WHERE tai_khoan.id = " +
                 req.params.table + ".ma_tai_khoan AND " + req.params.table + ".id = '" + req.params.id + "'";
@@ -187,7 +187,7 @@ module.exports = {
             var sql_account = "UPDATE `tai_khoan` SET `ten_tai_khoan`='" + student.email + "' WHERE `ten_tai_khoan`='" + req.body.email_old + "'";
             connection.query(sql_account, (err, rows) => {
                 if (error) throw error;
-                if(req.body.path != null) {
+                if (req.body.path != null) {
                     res.redirect(req.body.path);
                     return;
                 }
@@ -274,6 +274,8 @@ module.exports = {
         var sql = "SELECT * FROM `mon_hoc`";
         connection.query(sql, (err, rows) => {
             if (err) throw err;
+            // var xls = json2xls(rows);
+            // fs.writeFileSync('output.xlsx',xls, 'binary');
             res.render('page/subject', {
                 title: 'Subject',
                 user: res.locals.user,
@@ -345,18 +347,18 @@ module.exports = {
     },
 
     show_lop_hp: (req, res) => {
-        var sql = "SELECT ct_lop_hp.*,sinh_vien.ten,lop.ten_lop FROM `lop_hoc_phan`,`ct_lop_hp`,`sinh_vien`,`lop` "
-        +"WHERE lop_hoc_phan.ma_lop_hp = ct_lop_hp.ma_lop_hp AND ct_lop_hp.ma_sinh_vien = sinh_vien.msv AND sinh_vien.ma_lop = lop.id AND ct_lop_hp.ma_lop_hp='"+req.params.lop+"'";
+        var sql = "SELECT ct_lop_hp.*,sinh_vien.ten,lop.ten_lop FROM `lop_hoc_phan`,`ct_lop_hp`,`sinh_vien`,`lop` " +
+            "WHERE lop_hoc_phan.ma_lop_hp = ct_lop_hp.ma_lop_hp AND ct_lop_hp.ma_sinh_vien = sinh_vien.msv AND sinh_vien.ma_lop = lop.id AND ct_lop_hp.ma_lop_hp='" + req.params.lop + "'";
         connection.query(sql, (error, results) => {
             if (error) throw error;
-            var sql_lhp = "SELECT * FROM `lop_hoc_phan` where ma_lop_hp='"+req.params.lop+"'";
+            var sql_lhp = "SELECT * FROM `lop_hoc_phan` where ma_lop_hp='" + req.params.lop + "'";
             connection.query(sql_lhp, (err, rows) => {
                 if (err) throw err;
-                var sql_allclass = "SELECT * FROM `lop_hoc_phan` where ma_mon_hoc='"+rows[0].ma_mon_hoc+"'";
+                var sql_allclass = "SELECT * FROM `lop_hoc_phan` where ma_mon_hoc='" + rows[0].ma_mon_hoc + "'";
                 connection.query(sql_allclass, (err, lhp) => {
                     if (err) throw err;
                     res.render('page/listStudentmodules', {
-                        title: 'Module | '+rows[0].ten_lop_hp,
+                        title: 'Module | ' + rows[0].ten_lop_hp,
                         user: res.locals.user,
                         liststudent: results,
                         lop_hp: rows,
@@ -375,20 +377,23 @@ module.exports = {
             connection.query(sql_mh, (err, mon_hoc) => {
                 if (err) throw err;
                 var listDate = [
-                    ['T2','Thứ Hai'],['T3','Thứ Ba'],
-                    ['T4','Thứ Tư'],['T5','Thứ Năm'],
-                    ['T6','Thứ Sáu'],['T7','Thứ Bảy'],
-                    ['CN','Chủ Nhật']
+                    ['T2', 'Thứ Hai'],
+                    ['T3', 'Thứ Ba'],
+                    ['T4', 'Thứ Tư'],
+                    ['T5', 'Thứ Năm'],
+                    ['T6', 'Thứ Sáu'],
+                    ['T7', 'Thứ Bảy'],
+                    ['CN', 'Chủ Nhật']
                 ];
                 var sql = "SELECT * FROM `phong_hoc`";
-                connection.query(sql, (err,phong) => {
+                connection.query(sql, (err, phong) => {
                     if (err) throw err;
                     res.render('page/calendar', {
                         title: 'Calendar',
                         user: res.locals.user,
                         calendars: rows,
-                        subjects : mon_hoc,
-                        listDate:listDate,
+                        subjects: mon_hoc,
+                        listDate: listDate,
                         rooms: phong
                     })
                 })
@@ -397,7 +402,7 @@ module.exports = {
     },
 
     select_col: (req, res) => {
-        var sql = "SELECT * FROM `"+req.params.table+"` WHERE "+req.params.col+"='"+req.params.val+"'";
+        var sql = "SELECT * FROM `" + req.params.table + "` WHERE " + req.params.col + "='" + req.params.val + "'";
         console.log(sql);
         connection.query(sql, (err, rows) => {
             if (err) throw err;
@@ -405,32 +410,32 @@ module.exports = {
         })
     },
 
-    calendar_add: (req,res) => {
+    calendar_add: (req, res) => {
         var sql = "INSERT INTO `lich_hoc`(`tiet_hoc`, `thoi_gian`, `ma_phong`, `ma_lop_hp`, `mgv`) VALUES (?,?,?,?,?)";
         var calendar = [
-            req.body.bat_dau+"->"+req.body.ket_thuc,
+            req.body.bat_dau + "->" + req.body.ket_thuc,
             req.body.thuadd,
             req.body.phong,
             req.body.lop_hp,
             req.body.giao_vien,
         ];
-        connection.query(sql,calendar,(err,result) => {
+        connection.query(sql, calendar, (err, result) => {
             if (err) throw err;
             res.redirect("/admin/calendar");
         })
     },
 
-    calendar_edit: (req,res) => {
+    calendar_edit: (req, res) => {
         console.log(req.body);
         var sql = "UPDATE lich_hoc SET ? WHERE ma_lich =" + req.body.id;
         var calendar = {
-            tiet_hoc: req.body.bat_dau+"->"+req.body.ket_thuc,
+            tiet_hoc: req.body.bat_dau + "->" + req.body.ket_thuc,
             thoi_gian: req.body.thu,
             ma_phong: req.body.phong,
             ma_lop_hp: req.body.lop_hp,
             mgv: req.body.giao_vien,
         };
-        connection.query(sql,calendar,(err,result) => {
+        connection.query(sql, calendar, (err, result) => {
             if (err) throw err;
             res.redirect("/admin/calendar");
         })

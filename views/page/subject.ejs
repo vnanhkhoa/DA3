@@ -1,11 +1,21 @@
+<script src="//cdn.rawgit.com/rainabba/jquery-table2excel/1.1.0/dist/jquery.table2excel.min.js"></script>
 <script>
     $(document).ready(function () {
+
         $("#myInput").on("keyup", function () {
             var search = $(this).val().toLowerCase();
             $("#myTable tbody tr").filter(function () {
                 $(this).toggle($(this).text().toLowerCase().indexOf(search) > -1)
             });
         })
+        
+        $("button[name='export']").click(function(){
+             $("#myTable").table2excel({
+                exclude: "noExl",
+                name: "abc",
+                filename: "test"
+            });
+        });
         $("button[name='delete']").click(function () {
             var id = $(this).val();
             $.get(url + "admin/delete/mon_hoc/id/" + id, function (data) {
@@ -135,6 +145,7 @@
             <% }); %>
         </tbody>
     </table>
+    <button name="export">Export Excel</button>
 </div>
 <div class="modal fade" id="add" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
