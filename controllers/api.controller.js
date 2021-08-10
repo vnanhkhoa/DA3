@@ -2,45 +2,46 @@
 var connection = require('../connection.js');
 
 module.exports = {
-    login : (req, res) => {
+    login: (req, res) => {
+        let data = req.body;
         var email = req.body.email;
         var password = req.body.password;
         var sql = "SELECT sinh_vien.*,lop.ten_lop FROM `tai_khoan`,`sinh_vien`,`lop` "
-        +"WHERE lop.id=sinh_vien.ma_lop AND sinh_vien.ma_tai_khoan=tai_khoan.id AND "
-        +"ten_tai_khoan='"+email+"' AND mat_khau='"+password+"' AND vai_tro="+1;
+            + "WHERE lop.id=sinh_vien.ma_lop AND sinh_vien.ma_tai_khoan=tai_khoan.id AND "
+            + "ten_tai_khoan='" + email + "' AND mat_khau='" + password + "' AND vai_tro=" + 1;
         connection.query(sql, (err, rows) => {
             if (err) throw err;
-            if(rows.length == 0) {
-                res.send({error: "Tài khoản không tồn tại"})
+            if (rows.length == 0) {
+                res.send({ error: "Tài khoản không tồn tại" })
                 return;
             }
             var date = new Date(rows[0].ngay_sinh)
-            rows[0].ngay_sinh = date.getDate()+"-"+(date.getMonth()+1)+"-"+date.getFullYear();
+            rows[0].ngay_sinh = date.getDate() + "-" + (date.getMonth() + 1) + "-" + date.getFullYear();
             console.log(rows[0].ngay_sinh);
             res.send(rows[0]);
         })
     },
 
-    calendarToday : (req, res) => {
+    calendarToday: (req, res) => {
         var now = new Date();
-        var thu = ['T2','T3','T4','T5','T6','T7','CN'];
+        var thu = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
         var sql = "SELECT lich_hoc.*,lop_hoc_phan.ten_lop_hp,phong_hoc.ten_phong,"
-        +"ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
-        +"`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
-        +"AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
-        +" AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='"+req.params.msv+"' "
-        +"AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE() AND lich_hoc.thoi_gian='"+thu[now.getDay() - 1]+"'";
-        queryCalendars(res,sql);
+            + "ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
+            + "`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
+            + "AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
+            + " AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='" + req.params.msv + "' "
+            + "AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE() AND lich_hoc.thoi_gian='" + thu[now.getDay() - 1] + "'";
+        queryCalendars(res, sql);
     },
 
-    calendar : (req, res) => {
+    calendar: (req, res) => {
         var sql = "SELECT lich_hoc.*,lop_hoc_phan.ten_lop_hp,phong_hoc.ten_phong,"
-        +"ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
-        +"`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
-        +"AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
-        +" AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='"+req.params.msv+"' "
-        +"AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE()";
-        queryCalendars(res,sql);
+            + "ct_lop_hp.ma_sinh_vien,mon_hoc.ten_mon_hoc FROM `lich_hoc`,`lop_hoc_phan`,"
+            + "`phong_hoc`,`ct_lop_hp`,`mon_hoc` WHERE phong_hoc.ma_phong=lich_hoc.ma_phong "
+            + "AND lop_hoc_phan.ma_lop_hp=lich_hoc.ma_lop_hp AND mon_hoc.ma_mon_hoc=lop_hoc_phan.ma_mon_hoc"
+            + " AND ct_lop_hp.ma_lop_hp=lop_hoc_phan.ma_lop_hp AND ct_lop_hp.ma_sinh_vien='" + req.params.msv + "' "
+            + "AND mon_hoc.bat_dau <= CURDATE() AND mon_hoc.ket_thuc >= CURDATE()";
+        queryCalendars(res, sql);
     },
 
     updateSV: (req, res) => {
@@ -52,8 +53,8 @@ module.exports = {
             sdt: req.body.sdt,
             dia_chi: req.body.address,
         }
-        var sql = "UPDATE sinh_vien SET ? WHERE msv ='" + req.body.msv+ "'";
-        connection.query(sql, user,(err, rows) => {
+        var sql = "UPDATE sinh_vien SET ? WHERE msv ='" + req.body.msv + "'";
+        connection.query(sql, user, (err, rows) => {
             if (err) throw err;
             if (rows.changedRows == 1) {
                 res.send(true);
@@ -63,11 +64,11 @@ module.exports = {
         })
     },
 
-    edit_password : (req, res) => {
+    edit_password: (req, res) => {
         var user = req.body.email;
         var pass_old = req.body.pass_old;
         var pass_new = req.body.pass_new;
-        var sql = "UPDATE `tai_khoan` SET `mat_khau`='"+pass_new+"' WHERE `mat_khau`='"+pass_old+"' AND ten_tai_khoan='"+user+"'";
+        var sql = "UPDATE `tai_khoan` SET `mat_khau`='" + pass_new + "' WHERE `mat_khau`='" + pass_old + "' AND ten_tai_khoan='" + user + "'";
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             if (rows.changedRows == 1) {
@@ -78,9 +79,9 @@ module.exports = {
         })
     },
 
-    showPoint : (req, res) => {
+    showPoint: (req, res) => {
         var sql = "SELECT diem_hp.*,mon_hoc.ten_mon_hoc FROM `diem_hp`,`mon_hoc` "
-        +"WHERE diem_hp.ma_mon_hoc=mon_hoc.ma_mon_hoc AND diem_hp.ma_sinh_vien ='"+req.params.msv+"'";
+            + "WHERE diem_hp.ma_mon_hoc=mon_hoc.ma_mon_hoc AND diem_hp.ma_sinh_vien ='" + req.params.msv + "'";
         connection.query(sql, (err, rows) => {
             if (err) throw err;
             res.send(rows);
@@ -88,12 +89,12 @@ module.exports = {
     }
 }
 
-function queryCalendars(res,sql) {
+function queryCalendars(res, sql) {
     connection.query(sql, (err, rows) => {
         if (err) throw err;
         var list = [];
         var listmh = [];
-        rows.forEach((lich_hoc,index) => {
+        rows.forEach((lich_hoc, index) => {
             var lichhoc = {}
             lichhoc.lich_hoc = [];
             var time = {};
